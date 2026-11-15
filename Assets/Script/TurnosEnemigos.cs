@@ -7,22 +7,25 @@ public class TurnosEnemigos : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-    //public Queue<TurnosEnemigos> turnos = new Queue<TurnosEnemigos>();
+    public Queue<EnemyController> turnos = new Queue<EnemyController>();
     public Queue<Renderer> colorTurnos = new Queue<Renderer>();
 
-    //public TurnosEnemigos enemigo1;
-    //public TurnosEnemigos enemigo2;
-    //public TurnosEnemigos enemigo3;
+    public EnemyController enemigo1;
+    public EnemyController enemigo2;
+    public EnemyController enemigo3;
     public Renderer colorEnemigo1;
     public Renderer colorEnemigo2;
     public Renderer colorEnemigo3;
     public float esperaTurnos = 5f;
+    public int playerVida;
+    public int enemigoVida = 100;
+    public PlayerHealth player;
 
     void Start()
     {
-        //turnos.Enqueue(enemigo1);
-        //turnos.Enqueue(enemigo2);
-        //turnos.Enqueue(enemigo3);
+        turnos.Enqueue(enemigo1);
+        turnos.Enqueue(enemigo2);
+        turnos.Enqueue(enemigo3);
 
         colorTurnos.Enqueue(colorEnemigo1);
         colorTurnos.Enqueue(colorEnemigo2);
@@ -34,11 +37,13 @@ public class TurnosEnemigos : MonoBehaviour
     // Update is called once per frame
     IEnumerator Combate ()
     {
-        while (colorTurnos.Count > 0)
+        while (colorTurnos.Count > 0 && turnos.Count > 0 && player.IsAlive)
         {
-            Renderer enemigoActual = colorTurnos.Dequeue();
-            // Console.WriteLine("enemigo numero");
-            enemigoActual.material.color = Color.red;
+            EnemyController enemigoActual = turnos.Dequeue();
+            Renderer enemigoActualColor = colorTurnos.Dequeue();
+
+            enemigoActualColor.material.color = Color.red;
+            //enemigoActual.Attack(player);
             yield return new WaitForSeconds(esperaTurnos);
         }
     }
