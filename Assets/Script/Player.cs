@@ -9,9 +9,13 @@ public class Player : MonoBehaviour
     public enum State
     {
         Running,
-        Combat
+        Combat,
+        Inventory,
     }
     public State stadoPlayer;
+    public GameObject canvasInventorio;
+    public GameObject canvasRunning;
+
     void Start()
     {
         // Obtener referencia al componente Rigidbody2D
@@ -26,7 +30,31 @@ public class Player : MonoBehaviour
 
             // Captura la entrada horizontal (A/D o Flecha Izquierda/Derecha -> valores entre -1 y 1)
             horizontalInput = Input.GetAxisRaw("Horizontal");
+            if(Input.GetKeyDown(KeyCode.I))
+            {
+                InventoryManager.Instance.MostrarInventario();
+                canvasRunning.SetActive(false);
+                stadoPlayer = State.Inventory;
+            }
         }
+        if(stadoPlayer == State.Combat)
+        {
+            // Aquí puedes manejar la lógica de combate
+        }
+        if (stadoPlayer == State.Inventory)
+        {
+           canvasInventorio.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                SalirInventario();
+            }
+        }
+    }
+    public void SalirInventario()
+    {
+        stadoPlayer = State.Running;
+        canvasInventorio.SetActive(false);
+        canvasRunning.SetActive(true);
     }
 
     void FixedUpdate()
@@ -48,9 +76,9 @@ public class Player : MonoBehaviour
                 // Agregar el objeto al inventario
                 InventoryManager.Instance.AgregarItem(item);
                 // Destruir el objeto en la escena después de recogerlo
-                Destroy(other.gameObject);
+                other.gameObject.SetActive(false); // Desactivar el objeto en lugar de destruirlo
             }
-            other.gameObject.SetActive(false); // Desactivar el objeto en lugar de destruirlo
+            
         }
     }
 }
