@@ -17,9 +17,11 @@ public class TurnosEnemigos : MonoBehaviour
     public Renderer colorEnemigo2;
     public Renderer colorEnemigo3;
     public float esperaTurnos = 5f;
+    public Player player;
 
     void Start()
     {
+
         //turnos.Enqueue(enemigo1);
         //turnos.Enqueue(enemigo2);
         //turnos.Enqueue(enemigo3);
@@ -30,6 +32,7 @@ public class TurnosEnemigos : MonoBehaviour
 
         StartCoroutine(Combate());
     }
+   
 
     // Update is called once per frame
     IEnumerator Combate ()
@@ -39,7 +42,21 @@ public class TurnosEnemigos : MonoBehaviour
             Renderer enemigoActual = colorTurnos.Dequeue();
             // Console.WriteLine("enemigo numero");
             enemigoActual.material.color = Color.red;
+            HacerDañoAlJugador();
+
             yield return new WaitForSeconds(esperaTurnos);
+            enemigoActual.material.color = Color.white;
+        }
+       
+        
+    }
+
+    public void HacerDañoAlJugador()
+    {
+        if (player != null)
+        {
+            player.TakeDamage();
         }
     }
+
 }
